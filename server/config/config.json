@@ -1,0 +1,33 @@
+{
+  "development": {
+    "username": "root",
+    "password": "",
+    "database": "scot_study_db",
+    "host": "localhost",
+    "dialect": "mysql",
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    }
+  },
+  "test": {
+    "username": "postgres",
+    "password": "Nnamdi1984",
+    "database": "food_app_db",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "port": 5432,
+    "operatorsAliases": false
+  },
+
+  "production": {
+    "username": "thescoti_dev",
+    "password": "2000years@BC",
+    "database": "thescoti_db_dev",
+    "host": "68.66.224.47",
+    "dialect": "postgres",
+    "port": 5432
+  }
+}
