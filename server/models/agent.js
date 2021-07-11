@@ -9,16 +9,24 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Agent.belongsTo(models.User);
+      Agent.belongsTo(models.Role, {
+        foreignKey: "roleId",
+        as: "role",
+      });
+      Agent.hasMany(models.User);
       Agent.hasMany(models.Commission);
+      Agent.belongsTo(models.Country, {
+        foreignKey: "countryId",
+        as: "country",
+      });
     }
   }
   Agent.init(
     {
-      fullname: DataTypes.STRING,
-      companyName: DataTypes.STRING,
-      companyNumber: DataTypes.STRING,
+      agencyName: DataTypes.STRING,
       phone: DataTypes.STRING,
+      password: DataTypes.STRING,
+      email: DataTypes.STRING,
     },
     {
       sequelize,

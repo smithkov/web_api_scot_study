@@ -30,7 +30,7 @@ module.exports = {
       postalAddress,
       contactEmail,
       phone,
-      countyId,
+      countryId,
     } = req.body;
 
     const role = await Role.findOne({
@@ -77,7 +77,7 @@ module.exports = {
           postalAddress,
           contactEmail,
           phone,
-          countyId,
+          countryId,
         });
         const token = jwt.sign(
           {
@@ -166,7 +166,7 @@ module.exports = {
       include: [
         {
           model: Country,
-          as: "County",
+          as: "country",
         },
       ],
     });
@@ -195,7 +195,7 @@ module.exports = {
       homeAddress,
       postalAddress,
       contactEmail,
-      countyId,
+      countryId,
     } = req.body;
     const id = req.params.id;
 
@@ -211,7 +211,7 @@ module.exports = {
         homeAddress,
         postalAddress,
         contactEmail,
-        countyId,
+        countryId,
       },
       {
         where: {

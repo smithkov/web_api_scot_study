@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       hasSubmitted: DataTypes.BOOLEAN,
       hasDeleted: DataTypes.BOOLEAN,
       stage: DataTypes.STRING,
-      countyId: DataTypes.INTEGER,
+      countryId: DataTypes.INTEGER,
       cityId: DataTypes.INTEGER,
       userId: DataTypes.INTEGER,
       createdAt: DataTypes.DATE,

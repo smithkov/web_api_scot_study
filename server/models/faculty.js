@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Faculty.hasMany(models.Course);
 
       // Faculty.hasMany(models.FacultyPhoto);
-      Faculty.hasMany(models.FacultyPhoto);
+      Faculty.hasMany(models.CoursePhoto);
     }
   }
   Faculty.init(

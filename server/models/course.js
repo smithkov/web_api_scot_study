@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       Course.belongsTo(models.DegreeType);
       Course.belongsTo(models.Faculty);
       Course.belongsTo(models.Requirement);
+      Course.belongsTo(models.CoursePhoto, {
+        foreignKey: "coursePhotoId",
+        as: "CoursePhoto",
+      });
       Course.belongsTo(models.Institution);
     }
   }

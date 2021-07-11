@@ -63,12 +63,21 @@ module.exports = {
         type: Sequelize.STRING,
       },
 
-      countyId: {
+      countryId: {
         type: Sequelize.INTEGER,
         references: {
           model: "Countries",
           key: "id",
-          as: "countyId",
+          as: "countryId",
+        },
+      },
+
+      agentId: {
+        type: Sequelize.UUID,
+        references: {
+          model: "Agents",
+          key: "id",
+          as: "agentId",
         },
       },
     });

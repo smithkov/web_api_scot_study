@@ -14,8 +14,13 @@ module.exports = (sequelize, DataTypes) => {
         as: "Role",
       });
       User.belongsTo(models.Country, {
-        foreignKey: "countyId",
-        as: "County",
+        foreignKey: "countryId",
+        as: "country",
+      });
+
+      User.belongsTo(models.Agent, {
+        foreignKey: "agentId",
+        as: "Agent",
       });
 
       User.hasMany(models.Credential);

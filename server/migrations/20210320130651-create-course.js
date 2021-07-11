@@ -42,6 +42,14 @@ module.exports = {
           as: "facultyId",
         },
       },
+      coursePhotoId: {
+        type: Sequelize.UUID,
+        references: {
+          model: "CoursePhotos",
+          key: "id",
+          as: "coursePhotoId",
+        },
+      },
       institutionId: {
         type: Sequelize.UUID,
         references: {

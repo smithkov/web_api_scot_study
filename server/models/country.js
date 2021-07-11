@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Country.hasMany(models.User);
+      Country.hasMany(models.Agent);
     }
   }
   Country.init(

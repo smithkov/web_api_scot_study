@@ -2,6 +2,7 @@ const Course = require("../models").Course;
 const City = require("../models").City;
 const Institution = require("../models").Institution;
 const Faculty = require("../models").Faculty;
+const CoursePhoto = require("../models").CoursePhoto;
 const FacultyPhoto = require("../models").FacultyPhoto;
 const DegreeType = require("../models").DegreeType;
 const model = require("../models");
@@ -96,6 +97,10 @@ module.exports = {
           as: "Faculty",
         },
         {
+          model: CoursePhoto,
+          as: "CoursePhoto",
+        },
+        {
           model: DegreeType,
           as: "DegreeType",
         },
@@ -124,13 +129,12 @@ module.exports = {
           as: "Institution",
         },
         {
+          model: CoursePhoto,
+          as: "CoursePhoto",
+        },
+        {
           model: Faculty,
           as: "Faculty",
-          include: [
-            {
-              model: FacultyPhoto,
-            },
-          ],
         },
       ],
       subQuery: false,
@@ -176,6 +180,10 @@ module.exports = {
           ],
         },
         {
+          model: CoursePhoto,
+          as: "CoursePhoto",
+        },
+        {
           model: Faculty,
           as: "Faculty",
           required: false,
@@ -192,6 +200,9 @@ module.exports = {
 
   findCourseByInstitution: async (req, res) => {
     const { institutionId, offset, facultyId, degreeTypeId, limit } = req.body;
+    console.log("-------------------------------------------------------");
+    console.log(req.body);
+    console.log("-------------------------------------------------------");
     const dataObject = { institutionId: institutionId };
     if (facultyId != "") {
       dataObject.facultyId = facultyId;
@@ -214,6 +225,10 @@ module.exports = {
               as: "City",
             },
           ],
+        },
+        {
+          model: CoursePhoto,
+          as: "CoursePhoto",
         },
         {
           model: Faculty,
@@ -272,6 +287,10 @@ module.exports = {
             ],
           },
           {
+            model: CoursePhoto,
+            as: "CoursePhoto",
+          },
+          {
             model: Faculty,
             as: "Faculty",
             required: false,
@@ -302,6 +321,10 @@ module.exports = {
                 as: "City",
               },
             ],
+          },
+          {
+            model: CoursePhoto,
+            as: "CoursePhoto",
           },
           {
             model: Faculty,
@@ -346,6 +369,10 @@ module.exports = {
               as: "City",
             },
           ],
+        },
+        {
+          model: CoursePhoto,
+          as: "CoursePhoto",
         },
         {
           model: Faculty,
@@ -403,9 +430,11 @@ module.exports = {
     });
   },
   popularCourses: async (req, res) => {
+    const rand = Math.floor(Math.random() * 100) + 1;
     const data = await Course.findAll({
       where: { isPopular: true },
-      limit: 8,
+      limit: 4,
+      offset: rand,
       include: [
         {
           model: Institution,
@@ -416,6 +445,10 @@ module.exports = {
               as: "City",
             },
           ],
+        },
+        {
+          model: CoursePhoto,
+          as: "CoursePhoto",
         },
         {
           model: Faculty,
@@ -440,18 +473,16 @@ module.exports = {
           as: "Institution",
         },
         {
+          model: CoursePhoto,
+          as: "CoursePhoto",
+        },
+        {
           model: Institution,
           as: "Institution",
         },
         {
           model: Faculty,
           as: "Faculty",
-          include: [
-            {
-              model: FacultyPhoto,
-              as: "FacultyPhoto",
-            },
-          ],
         },
       ],
     });

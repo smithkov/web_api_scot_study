@@ -3,18 +3,32 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.addColumn("Applications", "decisionId", {
+      queryInterface.addColumn("CoursePhotos", "facultyId", {
         type: Sequelize.UUID,
         references: {
-          model: "Decisions",
+          model: "Faculties",
           key: "id",
-          as: "decisionId",
+          as: "facultyId",
         },
       }),
-      // queryInterface.addColumn("Applications", "refNo", {
+
+      // queryInterface.addColumn("Agents", "countryId", {
+      //   type: Sequelize.INTEGER,
+      //   references: {
+      //     model: "Countries",
+      //     key: "id",
+      //     as: "country",
+      //   },
+      // }),
+      // queryInterface.addColumn("Agents", "email", {
       //   type: Sequelize.STRING,
       //   allowNull: true,
       // }),
+      // queryInterface.addColumn("Agents", "password", {
+      //   type: Sequelize.STRING,
+      //   allowNull: true,
+      // }),
+
       // queryInterface.addColumn("Users", "bio", {
       //   type: Sequelize.TEXT,
       //   allowNull: true,

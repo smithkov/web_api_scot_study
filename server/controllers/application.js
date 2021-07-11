@@ -1,4 +1,8 @@
 const Application = require("../models").Application;
+const User = require("../models").User;
+const DegreeType = require("../models").DegreeType;
+const Agent = require("../models").Agent;
+
 const Query = new require("../utility/crud");
 
 const { SERVER_ERROR, OK, VALIDATION_ERROR } = require("../utility/statusCode");
@@ -96,7 +100,22 @@ module.exports = {
   findAll: async (req, res) => {
     const data = await Application.findAll({
       order: [["createdAt", "desc"]],
-      include: [{ all: true }],
+      include: [
+        {
+          model: User,
+          as: "User",
+          include: [
+            {
+              model: Agent,
+              as: "Agent",
+            },
+          ],
+        },
+        {
+          model: DegreeType,
+          as: "DegreeType",
+        },
+      ],
     });
     return res.status(OK).send({ error: false, data: data });
   },
