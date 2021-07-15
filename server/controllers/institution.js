@@ -1,4 +1,6 @@
 const Institution = require("../models").Institution;
+const Course = require("../models").Course;
+const City = require("../models").City;
 const Query = new require("../utility/crud");
 
 const { SERVER_ERROR, OK, VALIDATION_ERROR } = require("../utility/statusCode");
@@ -44,14 +46,21 @@ module.exports = {
       .catch((error) => res.status(SERVER_ERROR).send(error));
   },
 
-  findPk(req, res) {
+  findPk: async (req, res) => {
     const id = req.body.id;
-    return query
-      .findPK(id)
-      .then((institution) =>
-        res.status(OK).send({ error: false, data: institution })
-      )
-      .catch((error) => res.status(SERVER_ERROR).send(error));
+    const data = await Institution.findByPk(id, {
+      include: [
+        {
+          model: Course,
+          separate: true,
+        },
+        {
+          model: City,
+          separate: true,
+        },
+      ],
+    });
+    return res.status(OK).send({ error: false, data: data });
   },
 
   update(req, res) {
@@ -76,7 +85,25 @@ module.exports = {
   findAllLighter: async (req, res) => {
     const institution = await Institution.findAll({
       order: [["name", "asc"]],
-      include: [{ all: true }],
+      include: [
+        {
+          model: Course,
+          separate: true,
+        },
+      ],
+    });
+    return res.status(OK).send({ error: false, data: institution });
+  },
+
+  findAllForMenu: async (req, res) => {
+    const institution = await Institution.findAll({
+      order: [["name", "asc"]],
+      limit: 5,
+    });
+    institution.push({
+      name: "View more ...",
+      isForMore: true,
+      id: "/institutions",
     });
     return res.status(OK).send({ error: false, data: institution });
   },

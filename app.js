@@ -52,6 +52,12 @@ require(`${refPath}application`)(app);
 require(`${refPath}city`)(app);
 require(`${refPath}decision`)(app);
 require(`${refPath}banner`)(app);
+require(`${refPath}agent`)(app);
+require(`${refPath}coursePhoto`)(app);
+require(`${refPath}gallery`)(app);
+require(`${refPath}testimonial`)(app);
+require(`${refPath}phdApplication`)(app);
+require(`${refPath}phdQualification`)(app);
 
 app.use((err, req, res, next) => res.json(err));
 

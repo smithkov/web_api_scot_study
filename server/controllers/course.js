@@ -200,9 +200,7 @@ module.exports = {
 
   findCourseByInstitution: async (req, res) => {
     const { institutionId, offset, facultyId, degreeTypeId, limit } = req.body;
-    console.log("-------------------------------------------------------");
-    console.log(req.body);
-    console.log("-------------------------------------------------------");
+
     const dataObject = { institutionId: institutionId };
     if (facultyId != "") {
       dataObject.facultyId = facultyId;
@@ -279,27 +277,24 @@ module.exports = {
           {
             model: Institution,
             as: "Institution",
+            required: false,
             include: [
               {
                 model: City,
                 as: "City",
+                required: false,
               },
             ],
           },
           {
             model: CoursePhoto,
             as: "CoursePhoto",
+            required: false,
           },
           {
             model: Faculty,
             as: "Faculty",
             required: false,
-            // include: [
-            //   {
-            //     model: FacultyPhoto,
-            //     required: false,
-            //   },
-            // ],
           },
           {
             model: DegreeType,
@@ -319,17 +314,20 @@ module.exports = {
               {
                 model: City,
                 as: "City",
+                required: false,
               },
             ],
+            required: false,
           },
           {
             model: CoursePhoto,
             as: "CoursePhoto",
+            required: false,
           },
           {
             model: Faculty,
             as: "Faculty",
-            required: true,
+            required: false,
           },
           {
             model: DegreeType,

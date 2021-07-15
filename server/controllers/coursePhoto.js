@@ -1,9 +1,12 @@
 const CoursePhoto = require("../models").CoursePhoto;
+const Course = require("../models").Course;
 
 const Query = new require("../utility/crud");
 
 const { SERVER_ERROR, OK, VALIDATION_ERROR } = require("../utility/statusCode");
 const query = new Query(CoursePhoto);
+
+const courseQuery = new Query(Course);
 
 module.exports = {
   create: async (req, res) => {

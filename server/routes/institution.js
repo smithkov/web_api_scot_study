@@ -19,6 +19,7 @@ module.exports = (app) => {
 
   app.patch(rootUrl("institution/:id"), controller.update);
   app.post(rootUrl("institutionsLighter"), controller.findAllLighter);
+  app.post(rootUrl("institutionsForMenu"), controller.findAllForMenu);
 
   app.delete(rootUrl("institution/:id"), controller.delete);
 };
