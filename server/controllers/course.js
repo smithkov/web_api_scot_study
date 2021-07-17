@@ -200,7 +200,8 @@ module.exports = {
 
   findCourseByInstitution: async (req, res) => {
     const { institutionId, offset, facultyId, degreeTypeId, limit } = req.body;
-
+    console.log(req.body);
+    console.log("---------------------------------------------");
     const dataObject = { institutionId: institutionId };
     if (facultyId != "") {
       dataObject.facultyId = facultyId;
@@ -348,6 +349,120 @@ module.exports = {
       data: data,
     });
   },
+
+  compare: async (req, res) => {
+    const {
+      institutionId,
+      offset,
+      facultyId,
+      degreeTypeId,
+      limit,
+      search,
+      scholarshipAmount,
+    } = req.body;
+    console.log("---------------------------");
+    console.log(req.body);
+    const dataObject = {};
+    if (facultyId != "") {
+      dataObject.facultyId = facultyId;
+    }
+    if (degreeTypeId != "") {
+      dataObject.degreeTypeId = degreeTypeId;
+    }
+    if (search != "") {
+      dataObject.name = { [Op.like]: `%${search}%` };
+    }
+    if (institutionId != "") {
+      dataObject.institutionId = institutionId;
+    }
+    if (scholarshipAmount) {
+      dataObject.scholarshipAmount = {
+        [Op.not]: "0",
+      };
+    }
+
+    const hasData = Object.keys(dataObject).length;
+    let data;
+    if (hasData) {
+      data = await Course.findAll({
+        where: dataObject,
+        limit,
+        offset,
+        include: [
+          {
+            model: Institution,
+            as: "Institution",
+            required: false,
+            include: [
+              {
+                model: City,
+                as: "City",
+                required: false,
+              },
+            ],
+          },
+          {
+            model: CoursePhoto,
+            as: "CoursePhoto",
+            required: false,
+          },
+          {
+            model: Faculty,
+            as: "Faculty",
+            required: false,
+          },
+          {
+            model: DegreeType,
+            as: "DegreeType",
+            required: false,
+          },
+        ],
+        subQuery: false,
+      });
+    } else {
+      data = await Course.findAll({
+        include: [
+          {
+            model: Institution,
+            as: "Institution",
+            include: [
+              {
+                model: City,
+                as: "City",
+                required: false,
+              },
+            ],
+            required: false,
+          },
+          {
+            model: CoursePhoto,
+            as: "CoursePhoto",
+            required: false,
+          },
+          {
+            model: Faculty,
+            as: "Faculty",
+            required: false,
+          },
+          {
+            model: DegreeType,
+            as: "DegreeType",
+            required: false,
+          },
+        ],
+
+        subQuery: false,
+        limit,
+        offset,
+      });
+    }
+
+    res.status(OK).send({
+      error: false,
+      desc: "Matching result(s) based on your search",
+      data: data,
+    });
+  },
   findCoursesByFaculty: async (req, res) => {
     const facultyId = req.body.facultyId;
     const institutionId = req.body.institutionId;
@@ -383,6 +498,27 @@ module.exports = {
     res.status(OK).send({
       error: false,
       desc: "Matching result(s) based on your search",
+      data: data,
+    });
+  },
+
+  relatedCourses: async (req, res) => {
+    const facultyId = req.body.facultyId;
+    const rand = Math.floor(Math.random() * 10) + 1;
+    const data = await Course.findAll({
+      where: { facultyId },
+      include: [
+        {
+          model: CoursePhoto,
+          as: "CoursePhoto",
+        },
+      ],
+      subQuery: false,
+      limit: 4,
+      offset: rand,
+    });
+    res.status(OK).send({
+      error: false,
       data: data,
     });
   },
@@ -435,23 +571,8 @@ module.exports = {
       offset: rand,
       include: [
         {
-          model: Institution,
-          as: "Institution",
-          include: [
-            {
-              model: City,
-              as: "City",
-            },
-          ],
-        },
-        {
           model: CoursePhoto,
           as: "CoursePhoto",
-        },
-        {
-          model: Faculty,
-          as: "Faculty",
-          required: false,
         },
       ],
       subQuery: false,

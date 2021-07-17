@@ -52,11 +52,9 @@ module.exports = {
       include: [
         {
           model: Course,
-          separate: true,
         },
         {
           model: City,
-          separate: true,
         },
       ],
     });

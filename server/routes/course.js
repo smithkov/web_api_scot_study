@@ -15,6 +15,10 @@ module.exports = (app) => {
 
   app.post(rootUrl("popularCourses"), controller.popularCourses);
 
+  app.post(rootUrl("compare"), controller.compare);
+
+  app.post(rootUrl("relatedCourses"), controller.relatedCourses);
+
   app.post(rootUrl("findCoursesByFaculty"), controller.findCoursesByFaculty);
 
   app.post(rootUrl("allCoursesSearch"), controller.allCoursesSearch);
