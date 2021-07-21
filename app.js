@@ -58,6 +58,7 @@ require(`${refPath}gallery`)(app);
 require(`${refPath}testimonial`)(app);
 require(`${refPath}phdApplication`)(app);
 require(`${refPath}phdQualification`)(app);
+require(`${refPath}payment`)(app);
 
 app.use((err, req, res, next) => res.json(err));
 

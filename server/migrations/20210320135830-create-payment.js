@@ -10,6 +10,12 @@ module.exports = {
       amount: {
         type: Sequelize.REAL,
       },
+      refId: {
+        type: Sequelize.STRING,
+      },
+      stripeSessionId: {
+        type: Sequelize.STRING,
+      },
       paymentPurposeId: {
         type: Sequelize.UUID,
         references: {
@@ -17,6 +23,9 @@ module.exports = {
           key: "id",
           as: "paymentPurposeId",
         },
+      },
+      status: {
+        type: Sequelize.STRING,
       },
       userId: {
         type: Sequelize.UUID,

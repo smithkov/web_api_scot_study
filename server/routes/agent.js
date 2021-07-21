@@ -15,7 +15,7 @@ module.exports = (app) => {
 
   app.post(rootUrl("findAgentApplications"), controller.findAgentApplications);
 
-  app.get(rootUrl("isLogin"), AUTH, controller.isLogin);
+  //app.get(rootUrl("isLogin"), AUTH, controller.isLogin);
 
   app.post(rootUrl("agentById"), controller.agentById);
 

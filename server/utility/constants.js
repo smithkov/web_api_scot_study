@@ -29,7 +29,7 @@ module.exports = {
   system: "SYSTEM",
   ACCESS_TOKEN: "access_token",
   REFRESH_TOKEN: "refresh_token",
-  //SITE_URL: "https://foodengo.co.uk/",
+  //SITE_URL: "https://dev.scotstudy.co.uk/",
   SITE_URL: "http://localhost:3000/",
   AUTH: authenticateUser,
 };

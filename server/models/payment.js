@@ -10,12 +10,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Payment.belongsTo(models.PaymentPurpose);
-      Payment.belongsTo(models.User);
+
+      Payment.belongsTo(models.User, {
+        foreignKey: "userId",
+        as: "User",
+      });
     }
   }
   Payment.init(
     {
-      amount: DataTypes.REAL,
+      refId: DataTypes.STRING,
+      amount: DataTypes.STRING,
+      status: DataTypes.STRING,
+      stripeSessionId: DataTypes.STRING,
     },
     {
       sequelize,
