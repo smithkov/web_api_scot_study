@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       facultyId: DataTypes.UUID,
       degreeTypeId: DataTypes.UUID,
       institutionId: DataTypes.UUID,
-      scholarshipAmount: DataTypes.REAL,
+      scholarshipAmount: DataTypes.STRING,
       time: DataTypes.STRING,
       thumbnail: DataTypes.STRING,
       fee: DataTypes.STRING,

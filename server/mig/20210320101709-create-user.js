@@ -7,6 +7,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID,
       },
+      intId: {
+        type: Sequelize.INTEGER,
+      },
       username: {
         type: Sequelize.STRING,
       },
@@ -62,7 +65,11 @@ module.exports = {
       phone: {
         type: Sequelize.STRING,
       },
-
+      regDate: {
+        type: Sequelize.STRING,
+      },
+      expiryDate: { type: DataTypes.DATE },
+      forgotToken: { type: DataTypes.STRING },
       countryId: {
         type: Sequelize.INTEGER,
         references: {

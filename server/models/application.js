@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "decisionId",
         as: "Decision",
       });
+      Application.belongsTo(models.VisaApplyStatus, {
+        foreignKey: "visaApplyStatusId",
+        as: "VisaApplyStatus",
+      });
       Application.belongsTo(models.User, {
         foreignKey: "userId",
         as: "User",
@@ -91,6 +95,7 @@ module.exports = (sequelize, DataTypes) => {
       hasDeleted: DataTypes.BOOLEAN,
       decision: DataTypes.STRING,
       refNo: DataTypes.STRING,
+      regDate: DataTypes.STRING,
     },
     {
       sequelize,

@@ -9,13 +9,15 @@ module.exports = (app) => {
 
   app.get(rootUrl("course/:id"), controller.findPk);
 
-  app.get(rootUrl("runScript"), controller.runScript);
+  // app.get(rootUrl("runScript"), controller.runScript);
 
   app.post(rootUrl("searchCourse"), controller.courseSearch);
 
   app.post(rootUrl("popularCourses"), controller.popularCourses);
 
   app.post(rootUrl("compare"), controller.compare);
+
+  app.post(rootUrl("compareForMobile"), controller.compareForMobile);
 
   app.post(rootUrl("relatedCourses"), controller.relatedCourses);
 

@@ -43,20 +43,32 @@ module.exports = {
   autoUpdate: async (req, res) => {
     const findCourse = await Course.findAll();
 
-    findCourse.forEach(async (item) => {
-      const findCoursePhoto = await CoursePhoto.findAll({
+    //findCourse.map(async (item) => {
+    for (const item of findCourse) {
+      const findCoursePhoto = await CoursePhoto.findOne({
         where: { facultyId: item.FacultyId },
-        include: [{ all: true }],
       });
+
       if (findCoursePhoto.length > 1) {
         const photoCount = findCoursePhoto.length - 1;
         const rand = Math.floor(Math.random() * (photoCount - 0 + 1)) + 0;
 
-        const update = await courseQuery.update(item.id, {
-          coursePhotoId: findCoursePhoto[rand].id,
-        });
+        // await courseQuery.update(item.id, {
+        //   coursePhotoId: findCoursePhoto[rand].id,
+        // });
+
+        await Course.update(
+          {
+            coursePhotoId: findCoursePhoto[rand].id,
+          },
+          {
+            where: {
+              id: item.id,
+            },
+          }
+        );
       }
-    });
+    }
 
     return res.status(OK).send({ error: false });
   },

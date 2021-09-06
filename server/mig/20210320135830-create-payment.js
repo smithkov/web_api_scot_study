@@ -27,6 +27,9 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
       },
+      other: {
+        type: Sequelize.STRING,
+      },
       userId: {
         type: Sequelize.UUID,
         references: {

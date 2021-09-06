@@ -1,32 +1,19 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Sponsorships", {
+    await queryInterface.createTable("PaymentPurposes", {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
       },
-      sponsor: {
-        type: Sequelize.STRING,
-      },
       name: {
         type: Sequelize.STRING,
       },
-      occupation: {
-        type: Sequelize.STRING,
+      serial: {
+        type: Sequelize.INTEGER,
       },
-      budget: {
-        type: Sequelize.STRING,
-      },
-      userId: {
-        type: Sequelize.UUID,
-        references: {
-          model: "Users",
-          key: "id",
-          as: "userId",
-        },
-      },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -38,6 +25,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Sponsorships");
+    await queryInterface.dropTable("PaymentPurposes");
   },
 };

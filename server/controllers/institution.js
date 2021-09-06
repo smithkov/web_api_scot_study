@@ -83,12 +83,12 @@ module.exports = {
   findAllLighter: async (req, res) => {
     const institution = await Institution.findAll({
       order: [["name", "asc"]],
-      include: [
-        {
-          model: Course,
-          separate: true,
-        },
-      ],
+      // include: [
+      //   {
+      //     model: Course,
+      //     separate: true,
+      //   },
+      // ],
     });
     return res.status(OK).send({ error: false, data: institution });
   },

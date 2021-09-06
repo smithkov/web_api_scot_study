@@ -1,4 +1,5 @@
 const Payment = require("../models").Payment;
+const PaymentPurpose = require("../models").PaymentPurpose;
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Query = new require("../utility/crud");
 const { SITE_URL } = require("../utility/constants");
@@ -15,8 +16,17 @@ const query = new Query(Payment);
 
 module.exports = {
   paymentSession: async (req, res) => {
-    const { userId, amount } = req.body;
+    const { userId, amount, paymentPurposeId, other, hasOther } = req.body;
 
+    let paymentPurpose;
+    if (paymentPurposeId && !hasOther) {
+      const result = await PaymentPurpose.findByPk(paymentPurposeId);
+      if (result) {
+        paymentPurpose = result.name;
+      }
+    } else if (other) {
+      paymentPurpose = other;
+    }
     const randNum = Math.floor(100000 + Math.random() * 900000);
 
     const session = await stripe.checkout.sessions.create({
@@ -26,9 +36,9 @@ module.exports = {
           price_data: {
             currency: "gbp",
             product_data: {
-              name: "Visa Application Fee",
+              name: paymentPurpose,
               images: [
-                "https://scotsudy.s3.eu-west-2.amazonaws.com/logoMain+(2).png",
+                "https://freedesignfile.com/upload/2018/01/Secure-Payment-Icon.jpg",
               ],
             },
             unit_amount: amount * 100,
@@ -47,7 +57,9 @@ module.exports = {
         amount: amount,
         status: status.attempted,
         stripeSessionId: session.id,
+        paymentPurposeId,
         userId,
+        other,
       });
     }
     return res

@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "",
-    "database": "scot_study_db",
-    "host": "localhost",
+    "username": "foodengo_dev",
+    "password": "2000years@BC",
+    "database": "foodengo_scotstudy_db",
+    "host": "70.32.23.79",
     "dialect": "mysql",
     "pool": {
       "max": 5,
@@ -23,10 +23,10 @@
   },
 
   "production": {
-    "username": "thescoti_dev",
-    "password": "2000years@BC",
-    "database": "thescoti_db_dev",
-    "host": "68.66.224.47",
+    "username": "root",
+    "password": "",
+    "database": "scot_study_db",
+    "host": "localhost",
     "dialect": "postgres",
     "port": 5432
   }

@@ -5,9 +5,13 @@ module.exports = (app) => {
 
   app.post(rootUrl("allApplications"), controller.findAll);
 
+  app.post(rootUrl("findAllForDashboard"), controller.findAllForDashboard);
+
   app.post(rootUrl("findApplicationsByUser"), controller.findAllByuser);
 
   app.post(rootUrl("findOneApplicationByUser"), controller.findOneByuser);
+
+  app.post(rootUrl("findApplicationById"), controller.findById);
 
   //app.get(rootUrl("application/:id"), controller.findPk);
 

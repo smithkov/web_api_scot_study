@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         as: "User",
       });
+
+      Sponsorship.belongsTo(models.User, {
+        foreignKey: "relationshipId",
+        as: "Relationship",
+      });
     }
   }
   Sponsorship.init(
@@ -20,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       sponsor: DataTypes.STRING,
       name: DataTypes.STRING,
       occupation: DataTypes.STRING,
+
       budget: DataTypes.STRING,
     },
     {

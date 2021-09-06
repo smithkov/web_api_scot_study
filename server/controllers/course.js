@@ -7,6 +7,7 @@ const FacultyPhoto = require("../models").FacultyPhoto;
 const DegreeType = require("../models").DegreeType;
 const model = require("../models");
 const Op = require("sequelize").Op;
+const Sequelize = require("sequelize");
 const Query = new require("../utility/crud");
 const axios = require("axios");
 
@@ -199,15 +200,19 @@ module.exports = {
   },
 
   findCourseByInstitution: async (req, res) => {
-    const { institutionId, offset, facultyId, degreeTypeId, limit } = req.body;
-    console.log(req.body);
-    console.log("---------------------------------------------");
+    const { institutionId, offset, facultyId, degreeTypeId, limit, search } =
+      req.body;
+
     const dataObject = { institutionId: institutionId };
     if (facultyId != "") {
       dataObject.facultyId = facultyId;
     }
     if (degreeTypeId != "") {
       dataObject.degreeTypeId = degreeTypeId;
+    }
+
+    if (search != "") {
+      dataObject.name = { [Op.like]: `%${search}%` };
     }
 
     const data = await Course.findAll({
@@ -254,6 +259,7 @@ module.exports = {
       req.body;
 
     const dataObject = {};
+    console.log(req.body);
     if (facultyId != "") {
       dataObject.facultyId = facultyId;
     }
@@ -360,8 +366,7 @@ module.exports = {
       search,
       scholarshipAmount,
     } = req.body;
-    console.log("---------------------------");
-    console.log(req.body);
+
     const dataObject = {};
     if (facultyId != "") {
       dataObject.facultyId = facultyId;
@@ -463,15 +468,122 @@ module.exports = {
       data: data,
     });
   },
+
+  compareForMobile: async (req, res) => {
+    const {
+      offset,
+      facultyId,
+      degreeTypeId,
+      limit,
+      search,
+      institutionId1,
+      institutionId2,
+    } = req.body;
+    console.log(req.body);
+    const dataObject = {};
+    if (facultyId != "") {
+      dataObject.facultyId = facultyId;
+    }
+    if (degreeTypeId != "") {
+      dataObject.degreeTypeId = degreeTypeId;
+    }
+    if (search != "") {
+      dataObject.name = { [Op.like]: `%${search}%` };
+    }
+    console.log(institutionId1 + " " + institutionId2);
+    if (institutionId1 && institutionId2) {
+      dataObject.institutionId = [institutionId1, institutionId2];
+    }
+
+    const hasData = Object.keys(dataObject).length;
+    let data;
+    if (hasData) {
+      data = await Course.findAll({
+        where: dataObject,
+        limit,
+        offset,
+        include: [
+          {
+            model: Institution,
+            as: "Institution",
+            required: false,
+            include: [
+              {
+                model: City,
+                as: "City",
+                required: false,
+              },
+            ],
+          },
+          {
+            model: CoursePhoto,
+            as: "CoursePhoto",
+            required: false,
+          },
+          {
+            model: Faculty,
+            as: "Faculty",
+            required: false,
+          },
+          {
+            model: DegreeType,
+            as: "DegreeType",
+            required: false,
+          },
+        ],
+        subQuery: false,
+      });
+    } else {
+      data = await Course.findAll({
+        include: [
+          {
+            model: Institution,
+            as: "Institution",
+            include: [
+              {
+                model: City,
+                as: "City",
+                required: false,
+              },
+            ],
+            required: false,
+          },
+          {
+            model: CoursePhoto,
+            as: "CoursePhoto",
+            required: false,
+          },
+          {
+            model: Faculty,
+            as: "Faculty",
+            required: false,
+          },
+          {
+            model: DegreeType,
+            as: "DegreeType",
+            required: false,
+          },
+        ],
+
+        subQuery: false,
+        limit,
+        offset,
+      });
+    }
+
+    res.status(OK).send({
+      error: false,
+      desc: "Matching result(s) based on your search",
+      data: data,
+    });
+  },
   findCoursesByFaculty: async (req, res) => {
     const facultyId = req.body.facultyId;
-    const institutionId = req.body.institutionId;
-    let totalCourseLength;
 
     const data = await Course.findAll({
-      where: { facultyId, institutionId },
+      where: { facultyId },
       limit: 5,
-
+      order: Sequelize.literal("rand()"),
       include: [
         {
           model: Institution,
@@ -523,7 +635,7 @@ module.exports = {
     });
   },
   findCourseByInstitutionForReg: async (req, res) => {
-    const { institutionId, degreeTypeId, search } = req.body;
+    const { institutionId, degreeTypeId, search, facultyId } = req.body;
 
     const dataObject = {};
 
@@ -535,6 +647,10 @@ module.exports = {
     }
     if (institutionId != "") {
       dataObject.institutionId = institutionId;
+    }
+
+    if (facultyId != "") {
+      dataObject.facultyId = facultyId;
     }
 
     //const hasData = Object.keys(dataObject).length;
@@ -553,6 +669,11 @@ module.exports = {
           as: "DegreeType",
           required: false,
         },
+        {
+          model: Institution,
+          as: "Institution",
+          required: false,
+        },
       ],
       subQuery: false,
     });
@@ -564,11 +685,10 @@ module.exports = {
     });
   },
   popularCourses: async (req, res) => {
-    const rand = Math.floor(Math.random() * 100) + 1;
     const data = await Course.findAll({
       where: { isPopular: true },
       limit: 4,
-      offset: rand,
+      order: Sequelize.literal("rand()"),
       include: [
         {
           model: CoursePhoto,
@@ -643,96 +763,100 @@ module.exports = {
     // });
   },
   runScript: async (req, res) => {
-    // let result = await axios.post(
-    //   "https://www.scotstudy.co.uk/course/getAllcourses"
-    // );
-    // let data = result.data.data;
-    // let studyArea;
-    // let degreeType;
-    // let institution;
-    // data.forEach(async (item) => {
-    //   const {
-    //     name,
-    //     studyAreaId,
-    //     degreeTypeId,
-    //     fee,
-    //     duration,
-    //     isPopular,
-    //     scholarshipAmount,
-    //     institutionId,
-    //     intake,
-    //     time,
-    //   } = item;
-    //   if (institutionId == 2) {
-    //     institution = "8f69de01-c30c-4160-a804-51e92ea7936e";
-    //   } else if (institutionId == 3) {
-    //     institution = "5dcbbb7c-c1a4-4404-9887-6c18acb87ff5";
-    //   } else if (institutionId == 4) {
-    //     institution = "1d03e8c8-54ad-4494-b74b-2372008d334a";
-    //   } else if (institutionId == 5) {
-    //     institution = "557fc39b-5901-4463-972f-3e6e3c111f36";
-    //   } else if (institutionId == 6) {
-    //     institution = "0171d165-959b-4647-8267-f426b6de165a";
-    //   } else if (institutionId == 7) {
-    //     institution = "cd0b47a2-7c1a-40e9-88ed-ec7c72934035";
-    //   } else if (institutionId == 8) {
-    //     institution = "445d5b0b-6b9d-4e1d-af32-a8ad4d91cc65";
-    //   } else if (institutionId == 9) {
-    //     institution = "14022ef1-56d0-4742-a3d3-35e9cf7b6b04";
-    //   } else if (institutionId == 10) {
-    //     institution = "4b645b5f-aed7-4752-8f96-cf14914ce517";
-    //   } else if (institutionId == 11) {
-    //     institution = "e0efde4d-9619-44ac-be64-889a24d3ac0e";
-    //   } else if (institutionId == 12) {
-    //     institution = "c7f67d8b-b2f8-4f11-9fd9-fa870104c261";
-    //   } else if (institutionId == 13) {
-    //     institution = "ce2c8633-147e-408d-9a72-dc7090f021a9";
-    //   } else if (institutionId == 14) {
-    //     institution = "a32b7926-8775-440d-973a-b79d6f7cf0d5";
-    //   } else if (institutionId == 15) {
-    //     institution = "f932b8c6-8daa-4770-887f-4368bfdbdc54";
-    //   } else if (institutionId == 16) {
-    //     institution = "f50c7df5-48ee-4e4e-81aa-8d3ecd6b09a0";
-    //   } else if (institutionId == 17) {
-    //     institution = "5a2355d3-c4a3-4ec2-aece-b5a0725964a9";
-    //   }
-    //   if (studyAreaId == 1) {
-    //     studyArea = "250d2d75-7e69-49fa-8234-1cd565f57376";
-    //   } else if (studyAreaId == 2) {
-    //     studyArea = "36f19d62-ca16-4392-afc3-f6253d2da620";
-    //   } else if (studyAreaId == 5) {
-    //     studyArea = "3ef55fdd-6c8e-419f-9196-6053794b4095";
-    //   } else if (studyAreaId == 6) {
-    //     studyArea = "48478e98-42a6-4f08-9e49-8317870bfb44";
-    //   } else if (studyAreaId == 7) {
-    //     studyArea = "4d9d1262-450a-4eb9-a6a4-cff838af42d1";
-    //   } else if (studyAreaId == 8) {
-    //     studyArea = "7fb12650-7615-4614-bbf2-797d885c7c40";
-    //   } else if (studyAreaId == 9) {
-    //     studyArea = "8d246951-4b16-44f6-8cfa-8bd736742825";
-    //   } else if (studyAreaId == 10) {
-    //     studyArea = "a2059529-8766-4dd4-9bbb-dfa8f2540cc5";
-    //   }
-    //   if (degreeTypeId == 1) {
-    //     degreeType = "1aad6011-8464-4c38-a84e-36442d64911c";
-    //   } else if (degreeTypeId == 3) {
-    //     degreeType = "ead37f16-9474-4c55-ab96-c798341d60f4";
-    //   }
-    //   const create = await query.add({
-    //     name,
-    //     duration,
-    //     intake,
-    //     isPopular,
-    //     scholarshipAmount,
-    //     time,
-    //     institutionId: institution,
-    //     fee,
-    //     degreeTypeId: degreeType,
-    //     facultyId: studyArea,
-    //   });
-    // });
-    // return query
-    //   .findAll()
-    //   .then((course) => res.status(OK).send({ error: false, data: course }));
+    let result = await axios.post(
+      "https://www.scotstudy.co.uk/course/getAllcourses"
+    );
+    let data = result.data.data;
+    console.log(
+      "----------------------------------------------------------------------------------------------"
+    );
+    console.log(data);
+    let studyArea;
+    let degreeType;
+    let institution;
+
+    //data.forEach(async (item) => {
+    for (const item of data) {
+      const {
+        name,
+        studyAreaId,
+        degreeTypeId,
+        fee,
+        duration,
+        isPopular,
+        scholarshipAmount,
+        institutionId,
+        intake,
+        time,
+      } = item;
+      if (institutionId == 2) {
+        institution = "8f69de01-c30c-4160-a804-51e92ea7936e";
+      } else if (institutionId == 3) {
+        institution = "5dcbbb7c-c1a4-4404-9887-6c18acb87ff5";
+      } else if (institutionId == 4) {
+        institution = "1d03e8c8-54ad-4494-b74b-2372008d334a";
+      } else if (institutionId == 5) {
+        institution = "557fc39b-5901-4463-972f-3e6e3c111f36";
+      } else if (institutionId == 6) {
+        institution = "0171d165-959b-4647-8267-f426b6de165a";
+      } else if (institutionId == 7) {
+        institution = "cd0b47a2-7c1a-40e9-88ed-ec7c72934035";
+      } else if (institutionId == 8) {
+        institution = "445d5b0b-6b9d-4e1d-af32-a8ad4d91cc65";
+      } else if (institutionId == 9) {
+        institution = "14022ef1-56d0-4742-a3d3-35e9cf7b6b04";
+      } else if (institutionId == 10) {
+        institution = "4b645b5f-aed7-4752-8f96-cf14914ce517";
+      } else if (institutionId == 11) {
+        institution = "e0efde4d-9619-44ac-be64-889a24d3ac0e";
+      } else if (institutionId == 12) {
+        institution = "c7f67d8b-b2f8-4f11-9fd9-fa870104c261";
+      } else if (institutionId == 13) {
+        institution = "ce2c8633-147e-408d-9a72-dc7090f021a9";
+      } else if (institutionId == 14) {
+        institution = "a32b7926-8775-440d-973a-b79d6f7cf0d5";
+      } else if (institutionId == 15) {
+        institution = "f932b8c6-8daa-4770-887f-4368bfdbdc54";
+      } else if (institutionId == 16) {
+        institution = "f50c7df5-48ee-4e4e-81aa-8d3ecd6b09a0";
+      } else if (institutionId == 17) {
+        institution = "5a2355d3-c4a3-4ec2-aece-b5a0725964a9";
+      }
+      if (studyAreaId == 1) {
+        studyArea = "250d2d75-7e69-49fa-8234-1cd565f57376";
+      } else if (studyAreaId == 2) {
+        studyArea = "36f19d62-ca16-4392-afc3-f6253d2da620";
+      } else if (studyAreaId == 5) {
+        studyArea = "3ef55fdd-6c8e-419f-9196-6053794b4095";
+      } else if (studyAreaId == 6) {
+        studyArea = "48478e98-42a6-4f08-9e49-8317870bfb44";
+      } else if (studyAreaId == 7) {
+        studyArea = "4d9d1262-450a-4eb9-a6a4-cff838af42d1";
+      } else if (studyAreaId == 8) {
+        studyArea = "7fb12650-7615-4614-bbf2-797d885c7c40";
+      } else if (studyAreaId == 9) {
+        studyArea = "8d246951-4b16-44f6-8cfa-8bd736742825";
+      } else if (studyAreaId == 10) {
+        studyArea = "a2059529-8766-4dd4-9bbb-dfa8f2540cc5";
+      }
+      if (degreeTypeId == 1) {
+        degreeType = "1aad6011-8464-4c38-a84e-36442d64911c";
+      } else if (degreeTypeId == 3) {
+        degreeType = "ead37f16-9474-4c55-ab96-c798341d60f4";
+      }
+      const create = await query.add({
+        name,
+        duration,
+        intake,
+        isPopular,
+        scholarshipAmount: scholarshipAmount,
+        time,
+        institutionId: institution,
+        fee,
+        degreeTypeId: degreeType,
+        facultyId: studyArea,
+      });
+    }
+    res.status(OK).send({ error: false, data: {} });
   },
 };

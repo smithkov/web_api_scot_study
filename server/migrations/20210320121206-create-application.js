@@ -143,6 +143,9 @@ module.exports = {
       refNo: {
         type: Sequelize.STRING,
       },
+      regDate: {
+        type: Sequelize.STRING,
+      },
       cityId: {
         type: Sequelize.UUID,
         references: {
@@ -157,6 +160,14 @@ module.exports = {
           model: "Decisions",
           key: "id",
           as: "decisionId",
+        },
+      },
+      visaApplyStatusId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "VisaApplyStatuses",
+          key: "id",
+          as: "visaApplyStatusId",
         },
       },
       degreeTypeId: {

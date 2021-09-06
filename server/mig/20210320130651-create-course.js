@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.BOOLEAN,
       },
       scholarshipAmount: {
-        type: Sequelize.REAL,
+        type: Sequelize.STRING,
       },
       time: {
         type: Sequelize.STRING,
