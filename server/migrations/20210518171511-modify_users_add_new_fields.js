@@ -11,14 +11,12 @@ module.exports = {
       //     as: "facultyId",
       //   },
       // }),
-
-      queryInterface.addColumn("Users", "regDate", {
-        type: Sequelize.STRING,
-      }),
-      queryInterface.addColumn("Applications", "regDate", {
-        type: Sequelize.STRING,
-      }),
-
+      // queryInterface.addColumn("Users", "regDate", {
+      //   type: Sequelize.STRING,
+      // }),
+      // queryInterface.addColumn("Applications", "regDate", {
+      //   type: Sequelize.STRING,
+      // }),
       // queryInterface.addColumn("Agents", "countryId", {
       //   type: Sequelize.INTEGER,
       //   references: {
@@ -35,7 +33,6 @@ module.exports = {
       //   type: Sequelize.STRING,
       //   allowNull: true,
       // }),
-
       // queryInterface.addColumn("Users", "bio", {
       //   type: Sequelize.TEXT,
       //   allowNull: true,

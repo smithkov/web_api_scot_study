@@ -59,6 +59,9 @@ require(`${refPath}testimonial`)(app);
 require(`${refPath}phdApplication`)(app);
 require(`${refPath}phdQualification`)(app);
 require(`${refPath}payment`)(app);
+require(`${refPath}paymentPurpose`)(app);
+require(`${refPath}visaApplyStatus`)(app);
+require(`${refPath}document`)(app);
 
 app.use((err, req, res, next) => res.json(err));
 

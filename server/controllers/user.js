@@ -2,7 +2,7 @@ const User = require("../models").User;
 const sgMail = require("@sendgrid/mail");
 const Op = require("sequelize").Op;
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const Sponsorship = require("../models").Sponsorship;
+const Document = require("../models").Document;
 const Relationship = require("../models").Relationship;
 const VisaHistory = require("../models").VisaHistory;
 const PreviousQualification = require("../models").PreviousQualification;
@@ -98,6 +98,7 @@ module.exports = {
         } else {
           const user = await User.create({
             id: uuidv4(),
+            regDate: new Date().toString(),
             email,
             password: newPassword,
             roleId: role.id,
@@ -223,6 +224,9 @@ module.exports = {
         {
           model: Country,
           as: "country",
+        },
+        {
+          model: Document,
         },
       ],
     });

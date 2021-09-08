@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.BankDetail);
       User.hasMany(models.Qualification);
       User.hasMany(models.Application);
+      User.hasMany(models.Document);
     }
   }
   User.init(

@@ -4,6 +4,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const User = require("../models").User;
 const DegreeType = require("../models").DegreeType;
 const Agent = require("../models").Agent;
+const Document = require("../models").Document;
 const Query = new require("../utility/crud");
 const Op = require("sequelize").Op;
 
@@ -32,6 +33,7 @@ module.exports = {
       } = req.body;
 
       const data = await query.add({
+        regDate: new Date().toString(),
         courseOne,
         courseTwo,
         degreeTypeId,
@@ -172,7 +174,7 @@ module.exports = {
         where: dataObj,
         limit,
         offset,
-        order: [["createdAt", "desc"]],
+        order: [["regDate", "desc"]],
         include: [
           {
             model: User,
@@ -182,6 +184,9 @@ module.exports = {
               {
                 model: Agent,
                 as: "Agent",
+              },
+              {
+                model: Document,
               },
             ],
           },
@@ -195,7 +200,7 @@ module.exports = {
     } else {
       data = await Application.findAll({
         limit: limit,
-        order: [["createdAt", "desc"]],
+        order: [["regDate", "desc"]],
         include: [
           {
             model: User,
