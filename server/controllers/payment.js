@@ -38,7 +38,7 @@ module.exports = {
             product_data: {
               name: paymentPurpose,
               images: [
-                "https://freedesignfile.com/upload/2018/01/Secure-Payment-Icon.jpg",
+                "https://scotsudy.s3.eu-west-2.amazonaws.com/stripePayment.png",
               ],
             },
             unit_amount: amount * 100,

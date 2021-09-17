@@ -96,6 +96,8 @@ module.exports = (sequelize, DataTypes) => {
       decision: DataTypes.STRING,
       refNo: DataTypes.STRING,
       regDate: DataTypes.STRING,
+      //This is for the purpose of old credentials
+      credential: DataTypes.STRING,
     },
     {
       sequelize,

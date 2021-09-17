@@ -6,11 +6,12 @@ const query = new Query(Document);
 
 module.exports = {
   create: async (req, res) => {
+    console.log(req.files.docs);
     const { name, userId } = req.body;
     let data;
 
     const documentObject = req.files.docs;
-    console.log(req.files.docs);
+
     const doc = documentObject ? documentObject[0].location : null;
 
     data = await query.add({

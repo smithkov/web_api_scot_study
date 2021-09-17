@@ -146,6 +146,9 @@ module.exports = {
       regDate: {
         type: Sequelize.STRING,
       },
+      credential: {
+        type: Sequelize.STRING,
+      },
       cityId: {
         type: Sequelize.UUID,
         references: {
