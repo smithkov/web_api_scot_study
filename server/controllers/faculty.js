@@ -57,4 +57,8 @@ module.exports = {
     });
     return res.status(OK).send({ error: false, data: data });
   },
+  findAllSuperLight: async (req, res) => {
+    const data = await Faculty.findAll();
+    return res.status(OK).send({ error: false, data: data });
+  },
 };

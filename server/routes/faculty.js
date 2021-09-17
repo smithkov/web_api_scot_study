@@ -7,6 +7,8 @@ module.exports = (app) => {
 
   app.post(rootUrl("facultiesLight"), controller.findAllLight);
 
+  app.post(rootUrl("facultiesSuperLight"), controller.findAllSuperLight);
+
   app.get(rootUrl("faculty/:id"), controller.findPk);
 
   app.patch(rootUrl("faculty/:id"), controller.update);
