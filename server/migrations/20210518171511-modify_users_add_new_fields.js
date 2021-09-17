@@ -3,14 +3,9 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return Promise.all([
-      // queryInterface.addColumn("CoursePhotos", "facultyId", {
-      //   type: Sequelize.UUID,
-      //   references: {
-      //     model: "Faculties",
-      //     key: "id",
-      //     as: "facultyId",
-      //   },
-      // }),
+      queryInterface.addColumn("Applications", "credential", {
+        type: Sequelize.STRING,
+      }),
       // queryInterface.addColumn("Users", "regDate", {
       //   type: Sequelize.STRING,
       // }),

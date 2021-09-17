@@ -767,10 +767,7 @@ module.exports = {
       "https://www.scotstudy.co.uk/course/getAllcourses"
     );
     let data = result.data.data;
-    console.log(
-      "----------------------------------------------------------------------------------------------"
-    );
-    console.log(data);
+
     let studyArea;
     let degreeType;
     let institution;

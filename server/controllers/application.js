@@ -3,6 +3,7 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const User = require("../models").User;
 const DegreeType = require("../models").DegreeType;
+const Decision = require("../models").Decision;
 const Agent = require("../models").Agent;
 const Document = require("../models").Document;
 const Query = new require("../utility/crud");
@@ -126,95 +127,118 @@ module.exports = {
       decisionId,
       visaApplyStatusId,
     } = req.body;
-
+    console.log(req.body);
     const id = req.params.id;
-    return query
-      .update(id, {
-        hasPaid,
-        eligibilityCheck,
-        hasCAS,
-        hasDecided,
-        decisionId,
-        visaApplyStatusId,
+    const obj = {
+      hasPaid,
+      eligibilityCheck,
+      hasCAS,
+      hasDecided,
+    };
+    if (decisionId != "") {
+      console.log("enter decision");
+      obj.decisionId = decisionId;
+    }
+    if (visaApplyStatusId != "") {
+      obj.visaApplyStatusId = visaApplyStatusId;
+    }
+    return query.update(id, obj).then((application) =>
+      res.status(OK).send({
+        error: false,
+        data: application,
+        message: "Updated successfully",
       })
-      .then((application) =>
-        res.status(OK).send({
-          error: false,
-          data: application,
-          message: "Updated successfully",
-        })
-      )
-      .catch((error) =>
-        res.status(OK).send({ error: true, message: "Could not be updated!" })
-      );
+    );
+    // .catch((error) =>
+    //   res.status(OK).send({ error: true, message: "Could not be updated!" })
+    // );
   },
 
   findAll: async (req, res) => {
-    const { offset, limit, search, refSearch } = req.body;
+    const { offset, limit, search } = req.body;
     let dataObject = {};
     let dataObj = {};
-    console.log(req.body);
+    let hasData = false;
+    if (offset !== "" && offset != 0) {
+      hasData = true;
+    }
     if (search != "") {
+      hasData = true;
       dataObject = {
         [Op.or]: [
           { firstname: { [Op.like]: `%${search}%` } },
           { lastname: { [Op.like]: `%${search}%` } },
+          { email: { [Op.like]: `%${search}%` } },
         ],
       };
 
       // dataObject.lastname = { [Op.like]: `%${search}%` };
     }
-    if (refSearch != "") {
-      dataObj.refNo = { [Op.like]: `%${refSearch}%` };
-    }
+
     //const hasData = Object.keys(dataObject).length;
     let data;
-    if (dataObject) {
+    if (hasData) {
+      console.log("-------------------------------------------1st");
       data = await Application.findAll({
-        where: dataObj,
         limit,
         offset,
-        order: [["regDate", "desc"]],
+        order: [["createdAt", "desc"]],
         include: [
           {
             model: User,
             as: "User",
+            required: true,
             where: dataObject,
             include: [
               {
                 model: Agent,
                 as: "Agent",
               },
-              {
-                model: Document,
-              },
+              // {
+              //   model: Document,
+              // },
             ],
           },
           {
             model: DegreeType,
             as: "DegreeType",
+          },
+          {
+            model: Decision,
+            as: "Decision",
           },
         ],
         subQuery: false,
       });
     } else {
+      console.log("-------------------------------------------2nd");
       data = await Application.findAll({
-        limit: limit,
-        order: [["regDate", "desc"]],
+        limit: 10,
+        order: [["createdAt", "desc"]],
         include: [
           {
             model: User,
             as: "User",
+            required: true,
             include: [
               {
                 model: Agent,
                 as: "Agent",
               },
+              // {
+              //   required: false,
+              //   model: Document,
+              //   as: "Documents",
+              // },
             ],
           },
           {
             model: DegreeType,
             as: "DegreeType",
+          },
+          {
+            model: Decision,
+            as: "Decision",
           },
         ],
         subQuery: false,

@@ -62,6 +62,8 @@ require(`${refPath}payment`)(app);
 require(`${refPath}paymentPurpose`)(app);
 require(`${refPath}visaApplyStatus`)(app);
 require(`${refPath}document`)(app);
+require(`${refPath}contact`)(app);
+require(`${refPath}newsletter`)(app);
 
 app.use((err, req, res, next) => res.json(err));
 

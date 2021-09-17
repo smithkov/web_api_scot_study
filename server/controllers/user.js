@@ -4,6 +4,8 @@ const Op = require("sequelize").Op;
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const Document = require("../models").Document;
 const Relationship = require("../models").Relationship;
+const Sponsorship = require("../models").Sponsorship;
+const Decision = require("../models").Decision;
 const VisaHistory = require("../models").VisaHistory;
 const PreviousQualification = require("../models").PreviousQualification;
 const Application = require("../models").Application;
@@ -312,7 +314,7 @@ module.exports = {
         where: dataObj,
         limit,
         offset,
-        order: [["regDate", "desc"]],
+        order: [["createdAt", "desc"]],
         subQuery: false,
       });
     } else {
@@ -322,7 +324,7 @@ module.exports = {
       data = await User.findAll({
         limit,
         offset,
-        order: [["regDate", "desc"]],
+        order: [["createdAt", "desc"]],
         subQuery: false,
       });
     }
@@ -427,14 +429,28 @@ module.exports = {
 
   runApplicationMigration: async (req, res) => {
     let result = await axios.get(
-      "https://scotstudy.co.uk/application/findAllApplicants"
+      "http://foodengo.foodengo.a2hosted.com/application/allApplications"
     );
-    // result.data.app.forEach(async (user) => {
+    //result.data.app.forEach(async (user) => {
+    // // const allApplications = await Application.findAll();
+    // // console.log(allApplications);
+    // for (const user of allApplications) {
+    //   console.log("----------------------------------------" + user.regData);
+
     for (const user of result.data.app) {
       const country = await Country.findOne({
         where: { name: user.Country.name },
       });
-      const findUser = await User.findOne({ where: { intId: user.id } });
+      const findUser = await User.findOne({ where: { intId: user.userId } });
+
+      if (!findUser) {
+        continue;
+      } else {
+        console.log(
+          "User Founddddddddddddddddddddd ------------------------------------------------------"
+        );
+      }
+
       const findRelationship = await Relationship.findOne({
         where: { name: user.sponsor },
       });
@@ -451,73 +467,18 @@ module.exports = {
       //   countryId: country ? country.id : "",
       // };
 
-      // if (!findUser.phone && user.phone) {
+      // if (user.phone) {
       //   userData.phone = user.phone;
       // }
       // await User.update(userData, {
       //   where: {
-      //     intId: user.id,
+      //     id: findUser.id,
       //   },
       // });
-      // const data = {
-      //   hGrade: "Mba",
-      //   hSchoolName: "Obafemi Awolowo University ",
-      //   hCompleted: "Yes",
-      //   hProgrammeYear: "2019",
-      //   pQualification: "Bachelors",
-      //   createdAt: "2021-07-24T10:01:18.000Z",
-      //   pGrade: "Bsc ",
-      //   pSchoolName: "University of Ibadan ",
-      //   pCompleted: "Yes",
-      //   pProgrammeYear: "2011",
-      //   highSchoolName: "Dee Unique College",
-      //   completionYr: "2005",
-      //   englishTest: "NONE",
-      //   sponsor: "Other relatives",
-      //   sponsorName: "Mr Adeyemi",
-      //   sponsorOccupation: "Public service ",
-      //   budget: "15000",
-      //   hasApplied: "No",
-      //   purpose: "",
-      //   reasonOfRefusal: "",
-      //   moreInfo: "",
-      //   hasSubmitted: true,
-      //   hasDeleted: false,
-      //   stage: null,
-      //   decision: "Pending",
-      //   credential: "credential_1627122328216_doc05837720181120134749_004.jpg",
-      //   countryId: 162,
-      //   hQualification: "Masters",
-      //   course1: "MSc International Business Management",
-      //   course2: "MSc International Marketing",
-      //   level: "Masters",
-      //   cityId: 4,
-      //   courseId: 0,
-      //   userId: 660,
-      //   schoolWish1: "Glasgow Caledonian University",
-      //   schoolWish2: "Robert Gordon University",
-      //   eligibilityCheck: true,
-      //   reqProvision: false,
-      //   hasFinalSubmit: false,
-      //   hasDecided: true,
-      //   hasPaid: false,
-      //   hasCas: false,
-      //   updatedAt: "2021-07-26T09:37:24.000Z",
-      //   CityId: 4,
-      //   CourseId: 0,
-      //   CountryId: 162,
-      //   UserId: 660,
-      //   City: {
-      //     id: 4,
-      //     name: "Glasgow",
-      //     code: null,
-      //     createdAt: "2019-09-05T17:09:27.000Z",
-      //     updatedAt: "2019-09-05T17:09:27.000Z",
-      //   },
-      // } = user;
-      const findQualification = await QualificationType.findOne({
-        where: { name: user.hQualification },
-      });
+
+      // const findQualification = await QualificationType.findOne({
+      //   where: { name: user.hQualification },
+      // });
       // if (user.hSchoolName) {
       //   await Qualification.create({
       //     id: uuidv4(),
@@ -530,6 +491,10 @@ module.exports = {
       //   });
       // }
       // if (user.pSchoolName) {
+      //   const findQualification = await QualificationType.findOne({
+      //     where: { name: user.pQualification },
+      //   });
+
       //   await PreviousQualification.create({
       //     id: uuidv4(),
       //     pq_grade: user.pGrade,
@@ -548,7 +513,7 @@ module.exports = {
       //     userId: findUser.id,
       //   });
       // }
-      // if (findUser && user.sponsorName) {
+      // if (user.sponsorName) {
       //   let datObj = {
       //     id: uuidv4(),
       //     sponsor: user.sponsorName,
@@ -572,26 +537,41 @@ module.exports = {
       //   });
       // }
       // if (user.course1) {
-      //   await Application.create({
-      //     id: uuidv4(),
-      //     courseOne: user.course1,
-      //     courseTwo: user.course2,
-
-      //     institutionOne: user.schoolWish1,
-      //     institutionTwo: user.schoolWish2,
-      //     hasPaid: user.hasPaid,
-      //     eligibilityCheck: user.eligibilityCheck,
-      //     hasCAS: user.hasPaid,
-      //     hasDecided: user.hasDecided,
-      //     hasSubmitted: user.hasSubmitted,
-      //     refNo: randNumber(),
-      //     userId: findUser.id,
-      //     regDate: user.createdAt,
+      //   const findApplication = await Application.findOne({
+      //     where: { userId: findUser.id },
       //   });
+      //   if (findApplication) {
+      //     let name = null;
+      //     if (user.decision == "Pending") {
+      //       name = "Pending";
+      //     }
+      //     if (user.decision == "Conditional Offer") {
+      //       name = "Conditional Offer";
+      //     }
+      //     if (user.decision == "Unconditional Offer") {
+      //       name = "Unconditional Offer";
+      //     }
+      //     if (user.decision == "Application Rejected") {
+      //       name = "Rejected";
+      //     }
+
+      //     const findDecision = await Decision.findOne({
+      //       where: { name: name },
+      //     });
+      //     let dataObj = {
+      //       credential: user.credential,
+      //     };
+      //     if (findDecision) {
+      //       dataObj.decision = findDecision.id;
+      //     }
+      //     await Application.update(dataObj, {
+      //       where: { id: findApplication.id },
+      //     });
+      //   }
       // }
     }
 
-    return res.status(OK).send({ error: false, data: result.data.app });
+    //return res.status(OK).send({ error: false, data: result.data.app });
   },
 
   runUserMigration: async (req, res) => {
