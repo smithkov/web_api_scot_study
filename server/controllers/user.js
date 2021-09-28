@@ -166,7 +166,9 @@ module.exports = {
 
     const isEmail = validateEmail(email);
     const user = await User.findOne({
-      where: isEmail ? { email: email } : { username: email },
+      where: isEmail
+        ? { email: email, canShow: true }
+        : { username: email, canShow: true },
     });
     if (user) {
       bcrypt.compare(password, user.password, async (err, result) => {
@@ -221,7 +223,7 @@ module.exports = {
   userById: async (req, res) => {
     const userId = req.body.userId;
     const data = await User.findOne({
-      where: { id: userId },
+      where: { id: userId, canShow: true },
       include: [
         {
           model: Country,
@@ -296,6 +298,7 @@ module.exports = {
     if (search != "") {
       hasData = true;
       dataObj = {
+        canShow: true,
         [Op.or]: [
           { firstname: { [Op.like]: `%${search}%` } },
           { lastname: { [Op.like]: `%${search}%` } },
@@ -322,6 +325,7 @@ module.exports = {
         "--------------------------rrrrrrrrrrrrrrrrrrrrrrrr----------------------"
       );
       data = await User.findAll({
+        where: { canShow: true },
         limit,
         offset,
         order: [["createdAt", "desc"]],
@@ -419,11 +423,28 @@ module.exports = {
 
   findAllUserForDash: async (req, res) => {
     const data = await User.findAll({
+      where: { canShow: true },
       order: [["createdAt", "desc"]],
       limit: 12,
       include: [{ all: true }],
       subQuery: false,
     });
+    return res.status(OK).send({ error: false, data: data });
+  },
+
+  delete: async (req, res) => {
+    const id = req.params.id;
+
+    const data = await User.update(
+      {
+        canShow: false,
+      },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
     return res.status(OK).send({ error: false, data: data });
   },
 

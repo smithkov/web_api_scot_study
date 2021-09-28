@@ -32,5 +32,5 @@ module.exports = (app) => {
 
   app.patch(rootUrl("user/:id"), controller.update);
 
-  // app.delete(rootUrl("user/:id"), controller.delete);
+  app.delete(rootUrl("user/:id"), controller.delete);
 };

@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "foodengo_dev",
-    "password": "2000years@BC",
-    "database": "foodengo_scotstudy_db",
-    "host": "70.32.23.79",
+    "username": "root",
+    "password": "",
+    "database": "scot_study_db",
+    "host": "localhost",
     "dialect": "mysql",
     "pool": {
       "max": 5,
@@ -13,13 +13,17 @@
     }
   },
   "test": {
-    "username": "postgres",
-    "password": "Nnamdi1984",
-    "database": "food_app_db",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "port": 5432,
-    "operatorsAliases": false
+    "username": "root",
+    "password": "",
+    "database": "scot_study_db",
+    "host": "localhost",
+    "dialect": "mysql",
+    "pool": {
+      "max": 5,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    }
   },
 
   "production": {

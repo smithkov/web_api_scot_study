@@ -149,6 +149,10 @@ module.exports = {
       credential: {
         type: Sequelize.STRING,
       },
+      canShow: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       cityId: {
         type: Sequelize.UUID,
         references: {

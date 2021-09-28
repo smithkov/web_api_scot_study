@@ -74,16 +74,19 @@ module.exports = {
   },
   delete(req, res) {
     const id = req.params.id;
+
     return query
-      .delete(id)
-      .then((application) => res.status(OK).send({ error: false, data: id }))
+      .update(id, { canShow: false })
+      .then((application) =>
+        res.status(OK).send({ error: false, data: application })
+      )
       .catch((error) => res.status(SERVER_ERROR).send(error));
   },
 
   findAllByuser: async (req, res) => {
     const userId = req.body.userId;
     const data = await Application.findAll({
-      where: { userId },
+      where: { userId, canShow: true },
       include: [{ all: true }],
     });
     return res.status(OK).send({ error: false, data: data });
@@ -92,7 +95,7 @@ module.exports = {
   findOneByuser: async (req, res) => {
     const userId = req.body.userId;
     const data = await Application.findOne({
-      where: { userId },
+      where: { userId, canShow: true },
       include: [{ all: true }],
     });
     return res.status(OK).send({ error: false, data: data });
@@ -101,7 +104,7 @@ module.exports = {
   findById: async (req, res) => {
     const id = req.body.id;
     const data = await Application.findOne({
-      where: { id },
+      where: { id, canShow: true },
       include: [{ all: true }],
     });
     return res.status(OK).send({ error: false, data: data });
@@ -165,6 +168,7 @@ module.exports = {
     if (search != "") {
       hasData = true;
       dataObject = {
+        canShow: true,
         [Op.or]: [
           { firstname: { [Op.like]: `%${search}%` } },
           { lastname: { [Op.like]: `%${search}%` } },
@@ -180,6 +184,7 @@ module.exports = {
     if (hasData) {
       console.log("-------------------------------------------1st");
       data = await Application.findAll({
+        where: { canShow: true },
         limit,
         offset,
         order: [["createdAt", "desc"]],
@@ -213,6 +218,7 @@ module.exports = {
     } else {
       console.log("-------------------------------------------2nd");
       data = await Application.findAll({
+        where: { canShow: true },
         limit: 10,
         order: [["createdAt", "desc"]],
         include: [
@@ -220,6 +226,7 @@ module.exports = {
             model: User,
             as: "User",
             required: true,
+            where: { canShow: true },
             include: [
               {
                 model: Agent,
@@ -248,6 +255,7 @@ module.exports = {
   },
   findAllForDashboard: async (req, res) => {
     const data = await Application.findAll({
+      where: { canShow: true },
       order: [["createdAt", "desc"]],
       limit: 8,
       include: [

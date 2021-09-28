@@ -52,6 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       expiryDate: DataTypes.DATE,
       forgotToken: DataTypes.STRING,
       regDate: DataTypes.STRING,
+      canShow: DataTypes.BOOLEAN,
     },
     {
       sequelize,

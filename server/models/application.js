@@ -98,6 +98,7 @@ module.exports = (sequelize, DataTypes) => {
       regDate: DataTypes.STRING,
       //This is for the purpose of old credentials
       credential: DataTypes.STRING,
+      canShow: DataTypes.BOOLEAN,
     },
     {
       sequelize,

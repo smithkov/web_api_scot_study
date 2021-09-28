@@ -3,8 +3,13 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.addColumn("Applications", "credential", {
-        type: Sequelize.STRING,
+      queryInterface.addColumn("Applications", "canShow", {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+      }),
+      queryInterface.addColumn("Users", "canShow", {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
       }),
       // queryInterface.addColumn("Users", "regDate", {
       //   type: Sequelize.STRING,

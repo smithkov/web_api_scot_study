@@ -68,6 +68,10 @@ module.exports = {
       regDate: {
         type: Sequelize.STRING,
       },
+      canShow: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       expiryDate: { type: DataTypes.DATE },
       forgotToken: { type: DataTypes.STRING },
       countryId: {
