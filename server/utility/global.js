@@ -34,7 +34,10 @@ const upload = multer({
       cb(null, { fieldName: "scotstudy_img" });
     },
     key: function (req, file, cb) {
-      cb(null, `${Date.now()}${path.extname(file.originalname)}`);
+      cb(
+        null,
+        `${file.originalname}-${Date.now()}${path.extname(file.originalname)}`
+      );
     },
   }),
 });

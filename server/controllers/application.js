@@ -47,6 +47,9 @@ module.exports = {
       const findUser = await User.findByPk(userId, {
         include: [{ all: true }],
       });
+      console.log("---------------------------user email");
+      console.log(findUser.email);
+      console.log("---------------------------user email");
       const msg = {
         to: findUser.email,
         from: "info@scotstudy.co.uk",

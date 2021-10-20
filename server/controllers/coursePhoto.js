@@ -44,19 +44,27 @@ module.exports = {
     const findCourse = await Course.findAll();
 
     //findCourse.map(async (item) => {
+    // console.log("count---");
+    // console.log(findCourse.length);
+    // console.log("count ----");
     for (const item of findCourse) {
-      const findCoursePhoto = await CoursePhoto.findOne({
+      const findCoursePhoto = await CoursePhoto.findAll({
         where: { facultyId: item.FacultyId },
       });
-
+      console.log("---------------------------------------course Photo");
+      console.log(findCoursePhoto.length);
+      console.log("---------------------------------------course Photo");
       if (findCoursePhoto.length > 1) {
-        const photoCount = findCoursePhoto.length - 1;
-        const rand = Math.floor(Math.random() * (photoCount - 0 + 1)) + 0;
+        const photoCount = findCoursePhoto.length;
+        const rand = Math.floor(Math.random() * photoCount);
+        // const rand = Math.floor(Math.random() * (photoCount - 0 + 1)) + 0;
 
         // await courseQuery.update(item.id, {
         //   coursePhotoId: findCoursePhoto[rand].id,
         // });
-
+        console.log("--------------------------------we");
+        console.log(findCoursePhoto[rand].id);
+        console.log("--------------------------------we");
         await Course.update(
           {
             coursePhotoId: findCoursePhoto[rand].id,
