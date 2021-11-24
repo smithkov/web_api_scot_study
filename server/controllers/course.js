@@ -29,6 +29,28 @@ module.exports = {
       institutionId,
       degreeTypeId,
     } = req.body;
+
+    const search = name.toLowerCase();
+
+    const findCourse = await Course.findOne({
+      where: model.sequelize.where(
+        model.sequelize.fn("lower", model.sequelize.col("course.name")),
+        {
+          [Op.like]: `%${search}%`,
+        }
+      ),
+
+      subQuery: false,
+    });
+
+    if (findCourse) {
+      if (findCourse.institutionId == institutionId) {
+        return res
+          .status(OK)
+          .send({ data: findCourse, error: true, isDuplicate: true });
+      }
+    }
+
     const data = await query.add({
       name,
       duration,
@@ -111,7 +133,10 @@ module.exports = {
   },
   courseSearch: async (req, res) => {
     const search = req.body.search.toLowerCase();
-
+    console.log(
+      "----------------------------------------------------------------------"
+    );
+    console.log(search);
     const data = await Course.findAll({
       where: model.sequelize.where(
         model.sequelize.fn("lower", model.sequelize.col("course.name")),
@@ -150,7 +175,10 @@ module.exports = {
   courseByParams: async (req, res) => {
     const { institutionId, offset, facultyId, degreeTypeId, limit, search } =
       req.body;
-
+    console.log(
+      "---------------------------------kk-------------------------------------"
+    );
+    console.log(search);
     const dataObject = {};
     if (facultyId != "") {
       dataObject.facultyId = facultyId;
@@ -259,6 +287,9 @@ module.exports = {
       req.body;
 
     const dataObject = {};
+    console.log(
+      "---------------------------------kk-------------------------------------"
+    );
     console.log(req.body);
     if (facultyId != "") {
       dataObject.facultyId = facultyId;
